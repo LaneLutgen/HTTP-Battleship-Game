@@ -1,4 +1,6 @@
 import sys
+import http.client
+import urllib
 
 """
 Description: Main function for the battleship client.
@@ -7,6 +9,7 @@ Input:		 sys.argv[1] - The port number
 			 sys.argv[2] - The input board file for the client (.txt)
 """
 def main():
+	#Receive Input
 	port_num = int(sys.argv[1])
 	file_name = open(sys.argv[2], "r")
 
@@ -14,6 +17,24 @@ def main():
 
 	#TEST FUNCTION
 	test_server(port_num, file_content)
+
+
+"""
+NOT IMPLEMENTED
+
+This should be some sort of function to listen for HTTP commands from 
+the client. (May be a infinite loop but I'm not sure, would have to 
+be able to terminate it with a timeout of some sort)
+"""
+def http_listener(): 
+
+"""
+NOT IMPLEMENTED
+
+This will probably be some function to grab the HTML for the player
+board so we can determine a hit, miss, sunk, etc.
+"""
+def get_player_board():
 
 
 """
