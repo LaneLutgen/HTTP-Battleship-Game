@@ -47,6 +47,32 @@ def test_server(port_num, file_content):
 	print(port_num)
 	print(file_content)
 
+"""
+Description: Function that detects a sink.
+        Should be called in function that sends message to client.
+        ship_(letter) variables should be decreased each by 1 whenever they get hit, once reaching 0, it detects a sink.
+"""
+def check_sink():
+        if ship_c = 0: "Carrier"
+                return c "sends back the letter of the ship, think this will work, not sure because not good with python."
+                ship_c = -1 "Sets to -1, confirming that the ship has sunk, and it has been detected as such."
+        if ship_b = 0: "Battleship"
+                return b
+                ship_b = -1
+        if ship_r = 0: "Cruiser"
+                return r
+                ship_r = -1
+        if ship_s = 0: "Submarine"
+                return s
+                ship_s = -1
+        if ship_d = 0: "There are two destroyers, so we'll need a way to check which one sunk, this might work, not sure though."
+                return d
+                ship_d = -1
+        if ship_d2 = 0: 
+                return d
+                ship_d2 = -1
+        return 0 "Returns a 0, for no new sinks. Not sure if this'll work."
+
 
 #MAIN FUNCTION CALL
 main()
