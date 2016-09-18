@@ -38,7 +38,6 @@ def init_ships():
         ship_r = 3
         ship_s = 3
         ship_d = 2
-        ship_d2 = 2
 
 def init_board():
         x = 10 #board size
@@ -67,12 +66,9 @@ def init_board():
         #loop for submarine placing
         for x in range(0, ship_s):
                 board[3][x] = 'S'                
-        #loop for destroyer placing
-        for x in range(0, ship_d):
-                board[4][x] = 'D'
-        #loop for second placing        
-        for x in range(0, ship_d2): #second destroyer should probably have the same length as regular ship_d, but ship_d2 exists for sink detection anyways, so I used it here.
-                board[5][x] = 'd' #lowercase for the second destroyer, will have to convert when shown to client, but this is probably necessary for hit/sink detection.
+        #destroyer placing
+        board[4][0] = 'D'
+        board[5][0] = 'D'
 
 """
 Description:    Initializes the HTTP Server
@@ -150,14 +146,6 @@ def hit_detect(x, y):
                         return '1d'
                 else:
                         return '10'
-                
-        if(board[x][y] == 'd'): #destroyer 2
-                board[x][y] == 'X'
-                ship_d2 -= 1
-                if(check_sink() != 0):
-                        return '1d' #Can be the same as the message for destroyer 1, since it will say the same thing. "You sunk a destroyer."
-                else:
-                        return '10'
 
 """
 Description: Function that detects a sink.
@@ -180,9 +168,6 @@ def check_sink():
         if ship_d == 0: #Destroyer
                 return 'd'
                 ship_d = -1
-        if ship_d2 == 0: #Destroyer 2
-                return 'd'
-                ship_d2 = -1        
         return 0 #Returns a 0, for no new sinks. Not sure if this'll work.
 
 """
@@ -201,7 +186,7 @@ def board_print():
 Description: Checks if the game is over, pretty sure we dont need it, but I made it just in case. Nothing calls this yet.
 """
 def end_check():
-        if (ship_c == -1 and ship_b == -1 and ship_r == -1 and ship_s == -1 and ship_d == -1 and ship_d2 == -1):
+        if (ship_c == -1 and ship_b == -1 and ship_r == -1 and ship_s == -1 and ship_d == -1):
                 return 1 #game over
         else:
                 return 0 #game not over
