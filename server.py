@@ -14,7 +14,6 @@ def main():
         global ship_r 
         global ship_s 
         global ship_d
-        global ship_d2
         global board
 
         #HANDLE CMD INPUT
