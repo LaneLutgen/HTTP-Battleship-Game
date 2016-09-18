@@ -46,7 +46,7 @@ def init_board():
         
 	#f = open('board.txt', 'r')
         #boardstr = f.read()
-        boardstr = file_name.read() #assuming that file_name is board.txt, above can be used if that's not the case.
+        boardstr = file_name.read() #assuming that file_name is board.txt, above can be used if that's not the case. file_name is also not global, so that might cause a problem, but I'll let you handle that.
         p = 0
         for i in range(0, len(boardstr[0])):
                 for j in range(0, len(boardstr[0])):
