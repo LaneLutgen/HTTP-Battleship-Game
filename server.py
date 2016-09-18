@@ -14,6 +14,8 @@ def main():
         global ship_r 
         global ship_s 
         global ship_d
+        global ship_d2
+        global board
 
         #HANDLE CMD INPUT
         port_num = int(sys.argv[1])
@@ -24,6 +26,7 @@ def main():
         #TEST FUNCTION
         test_server(port_num, file_content)
         init_ships()
+        init_board()
         init_http_server(port_num)
 
 """
@@ -35,6 +38,41 @@ def init_ships():
         ship_r = 3
         ship_s = 3
         ship_d = 2
+        ship_d2 = 2
+
+def init_board():
+        x = 10 #board size
+        y = 10
+        board = [ [ 0 for i in range(x) ] for j in range (y) ]
+
+        
+        #loop that fills with empty spaces. could be unnecessary, makes print statement terrible. Without it there's just 0's instead.
+        for i in range(0, x):
+                for j in range(0, y):
+                        board[i][j] = '_'
+       
+
+        
+        #ship placement is hard coded for now, not sure if we need to change that.
+        
+        #loop for carrier placing
+        for x in range(0, ship_c):
+                board[0][x] = 'C'
+        #loop for battleship placing
+        for x in range(0, ship_b):
+                board[1][x] = 'B'
+        #loop for cruiser placing
+        for x in range(0, ship_r):
+                board[2][x] = 'R'        
+        #loop for submarine placing
+        for x in range(0, ship_s):
+                board[3][x] = 'S'                
+        #loop for destroyer placing
+        for x in range(0, ship_d):
+                board[4][x] = 'D'
+        #loop for second placing        
+        for x in range(0, ship_d2): #second destroyer should probably have the same length as regular ship_d, but ship_d2 exists for sink detection anyways, so I used it here.
+                board[5][x] = 'd' #lowercase for the second destroyer, will have to convert when shown to client, but this is probably necessary for hit/sink detection.
 
 """
 Description:    Initializes the HTTP Server
@@ -59,6 +97,69 @@ def test_server(port_num, file_content):
 
 
 """
+Description: Function that detects hit, miss, error.
+Very unsure about the return values, will probably need to be changed for the message.
+"""
+def hit_detect(x, y):
+        if(x > len(board[x]) - 1 or y > len(board[x]) - 1): #out of bounds check, only need to check one dimension since board is square.
+                return '010' #these return statements are probably placeholder, will depend on how we format the message that we send.
+        
+        if(board[x][y] == 'X'): #repeated coordinate.
+                return '000' 
+        
+        if(board[x][y] == '_'): #miss check
+                return '00'
+
+        
+        if(board[x][y] == 'C'): #carrier
+                board[x][y] == 'X' #marks the spot to show it's been shot
+                ship_c -= 1 
+                if(check_sink() != 0):
+                        return '1c' #hit and sunk
+                else:
+                        return '10' #just a hit
+                
+        if(board[x][y] == 'B'): #battleship
+                board[x][y] == 'X'
+                ship_b -= 1
+                if(check_sink() != 0):
+                        return '1b'
+                else:
+                        return '10'
+                
+        if(board[x][y] == 'R'): #cruiser
+                board[x][y] == 'X'
+                ship_r -= 1
+                if(check_sink() != 0):
+                        return '1r'
+                else:
+                        return '10'
+                
+        if(board[x][y] == 'S'): #submarine
+                board[x][y] == 'X'
+                ship_s -= 1
+                if(check_sink() != 0):
+                        return '1s'
+                else:
+                        return '10'
+                
+        if(board[x][y] == 'D'): #destroyer
+                board[x][y] == 'X'
+                ship_d -= 1
+                if(check_sink() != 0):
+                        return '1d'
+                else:
+                        return '10'
+                
+        if(board[x][y] == 'd'): #destroyer 2
+                board[x][y] == 'X'
+                ship_d2 -= 1
+                if(check_sink() != 0):
+                        return '1d' #Can be the same as the message for destroyer 1, since it will say the same thing. "You sunk a destroyer."
+                else:
+                        return '10'
+
+"""
 Description: Function that detects a sink.
         Should be called in function that sends message to client.
         ship_(letter) variables should be decreased each by 1 whenever they get hit, once reaching 0, it detects a sink.
@@ -77,8 +178,34 @@ def check_sink():
                 return 's'
                 ship_s = -1
         if ship_d == 0: #Destroyer
+                return 'd'
                 ship_d = -1
+        if ship_d2 == 0: #Destroyer 2
+                return 'd'
+                ship_d2 = -1        
         return 0 #Returns a 0, for no new sinks. Not sure if this'll work.
+
+"""
+Description: This is a function that prints the current board, this could probably be used for updating the board, but I'm not sure. Regardless, here it is.
+"""
+def board_print():
+        s = ''
+        for i in range(0, len(board[0]) - 1):
+                for j in range(0, len(board[0]) - 1):
+                        s += str(board[i][j])
+                        if(j == len(board[0]) - 2):
+                                print(s)
+                                s = ''
+                                
+"""
+Description: Checks if the game is over, pretty sure we dont need it, but I made it just in case. Nothing calls this yet.
+"""
+def end_check():
+        if (ship_c == -1 and ship_b == -1 and ship_r == -1 and ship_s == -1 and ship_d == -1 and ship_d2 == -1):
+                return 1 #game over
+        else:
+                return 0 #game not over
+
 
 """
 Description: Class for handling any GET messages
