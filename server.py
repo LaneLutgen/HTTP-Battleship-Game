@@ -44,30 +44,18 @@ def init_board():
         board = [ [ 0 for i in range(x) ] for j in range (y) ]
 
         
-        #loop that fills with empty spaces. could be unnecessary, makes print statement terrible. Without it there's just 0's instead.
-        for i in range(0, x):
-                for j in range(0, y):
-                        board[i][j] = '_'
-       
-
-        
-        #ship placement is hard coded for now, not sure if we need to change that.
-        
-        #loop for carrier placing
-        for x in range(0, ship_c):
-                board[0][x] = 'C'
-        #loop for battleship placing
-        for x in range(0, ship_b):
-                board[1][x] = 'B'
-        #loop for cruiser placing
-        for x in range(0, ship_r):
-                board[2][x] = 'R'        
-        #loop for submarine placing
-        for x in range(0, ship_s):
-                board[3][x] = 'S'                
-        #destroyer placing
-        board[4][0] = 'D'
-        board[5][0] = 'D'
+	#f = open('board.txt', 'r')
+        #boardstr = f.read()
+        boardstr = file_name.read() #assuming that file_name is board.txt, above can be used if that's not the case.
+        p = 0
+        for i in range(0, len(boardstr[0])):
+                for j in range(0, len(boardstr[0])):
+                        if (test[p] == '\n'):
+                                boardstr[i][j] = test[p+1]
+                                p += 2
+                        else:
+                                boardstr[i][j] = test[p]
+                                p += 1
 
 """
 Description:    Initializes the HTTP Server
