@@ -8,7 +8,6 @@ Description:    Main function for the battleship client.
 Input:          sys.argv[1] - The port number
                 sys.argv[2] - The input board file for the client (.txt)
 """
-
 def main():
         global ship_c
         global ship_b
@@ -27,29 +26,30 @@ def main():
         init_ships()
         init_http_server(port_num)
 
-
+"""
+Description:    Initializes the ships with the number of hits left before sinking
+"""
 def init_ships():
         ship_c = 5
         ship_b = 4
         ship_r = 3
         ship_s = 3
-        ship_d = 3
+        ship_d = 2
 
 """
-This should be some sort of function to listen for HTTP commands from 
-the client. (May be a infinite loop but I'm not sure, would have to 
-be able to terminate it with a timeout of some sort)
+Description:    Initializes the HTTP Server
 """
 def init_http_server(port_num):
         ip_address = '127.0.0.1' #not sure if this is correct or not 
         server_address = (ip_address, port_num)
         httpd = HTTPServer(server_address, BattleShipHTTP_RequestHandler)
         print("HTTP Server Initialized")
+
+        #This will need to be terminated somehow
         httpd.serve_forever()
 
 """
-Description: Main function for the battleship client.
-		Takes in 2 system arguments from command line
+Description:    Test function for the command line input
 Params:		port_num - The port number
 		file_content - The input board file for the client (.txt)
 """
@@ -76,8 +76,7 @@ def check_sink():
         if ship_s == 0: #Submarine
                 return 's'
                 ship_s = -1
-        if ship_d == 0: #There are two destroyers, so we'll need a way to check which one sunk, this might work, not sure though.
-                return 'd'
+        if ship_d == 0: #Destroyer
                 ship_d = -1
         return 0 #Returns a 0, for no new sinks. Not sure if this'll work.
 
@@ -86,6 +85,9 @@ Description: Class for handling any GET messages
 """
 class BattleShipHTTP_RequestHandler(BaseHTTPRequestHandler):
 
+        """
+        Handler for any GET messages received
+        """
         def do_GET():
                 return 0
 
