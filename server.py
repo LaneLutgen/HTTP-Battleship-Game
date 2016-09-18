@@ -88,8 +88,9 @@ class BattleShipHTTP_RequestHandler(BaseHTTPRequestHandler):
         """
         Handler for any GET messages received
         """
-        def do_GET():
-                return 0
+        def do_GET(self):
+                self.protocol_version = 'HTTP/1.1'
+                self.send_response(200, 'OK')
 
 
 
