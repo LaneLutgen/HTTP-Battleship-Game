@@ -19,6 +19,9 @@ def main():
         global file_name
         global file_content
 
+        global player_board
+        global opponent_board
+
         #HANDLE CMD INPUT
         port_num = int(sys.argv[1])
         file_name = open(sys.argv[2], "r")
@@ -188,6 +191,21 @@ def end_check():
                 return 0 #game not over
 
 
+
+def build_response(hit, sink):
+                return "x="+str(hit)+"&y="+str(sink)
+
+
+
+def determine_response_code(code):
+        if code == '010':
+                return 404
+        if code == '000':
+                return 410
+        else:
+                return 200
+
+
 """
 Description: Class for handling any GET messages
 """
@@ -229,22 +247,19 @@ class BattleShipHTTP_RequestHandler(BaseHTTPRequestHandler):
                 print(y_coord)
 
                 retval = hit_detect(int(x_coord), int(y_coord))
-                print(retval)
+                response = determine_response_code(retval)
                 board_print()
 
                 """NEED TO UPDATE BOARD HERE"""
 
 
                 self.protocol_version = 'HTTP/1.1'
-                self.send_response(200)
+                self.send_response(response)
                 self.send_header("User-Agent", "application/x-www-form-urlencoded")
                 self.send_header("Content-type", "text/html")
                 self.send_header("Response", "hit=1&sink=D")
                 self.end_headers()
                 return
-
-        def build_response(hit, sink):
-                return "x="+str(hit)+"&y="+str(sink)
 
 
 #MAIN FUNCTION CALL
