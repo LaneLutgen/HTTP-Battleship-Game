@@ -229,8 +229,8 @@ class BattleShipHTTP_RequestHandler(BaseHTTPRequestHandler):
                 self.send_response(200)
                 self.send_header("User-Agent", "application/x-www-form-urlencoded")
                 self.send_header("Content-type", "text/html")
+                self.send_header("Response", "hit=1&sink=D")
                 self.end_headers()
-                self.wfile.write(str.encode("hit=1&sink=D"))
                 return
 
 

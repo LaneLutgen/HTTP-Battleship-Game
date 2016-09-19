@@ -1,6 +1,6 @@
 import sys
 import http.client
-import urllib
+from urllib.parse import urlparse, parse_qs
 
 """
 Description: Main function for the battleship client.
@@ -21,54 +21,52 @@ def main():
 		test_client(ip_address, port_number, x_coord, y_coord)
 
 		#Establish connection
-		connect_to_server(ip_address, port_number)
+		url = build_url(x_coord, y_coord)
+		connect_to_server(ip_address, port_number, url)
 
+"""
+Description: Builds a url from the input x and y coordinates
+"""
+def build_url(x_coord, y_coord):
+		return "x="+str(x_coord)+"&y="+str(y_coord)
 
 """
 Description: Uses HTTP client to connect to a server
 Params: ip_address - the IP address of the server
 		port_number - the port number to use
 """
-def connect_to_server(ip_address, port_number):
+def connect_to_server(ip_address, port_number, url):
 		connection = http.client.HTTPConnection(ip_address, port_number)
-
-		#TEST ONLY
-		url = "x=5&y=7"
 
 		#I'm thinking we'll use POST to send a fire message and GET to get the board state(s)
 		connection.request("POST", url, url, headers={"Content-Length": len(url)})
 
 		response = connection.getresponse()
 
-		print(response.getheaders())
-
-		#Here we should get our hit/miss/sunk message
-		print(response.read(20))
-		print(response.status)
+		interpret_response(response)
 
 		connection.close()
 
 """
-NOT IMPLEMENTED
-
-Should send HTTP command to opponent server
-
-NOTE: Boards are 0 indexed (Ex. 0-9) 
-"""
-#def fire_at_opponent(x_coord, y_coord):
 
 """
-NOT IMPLEMENTED
-Should update the HTML representation of the player board
-"""
-#def update_player_board():
+def interpret_response(response):
+		print(response.getheaders())
 
-"""
-NOT IMPLEMENTED
+		#Here we should get our hit/miss/sunk message
+		print(response.read())
 
-Should update the HTML representation of the opponent board
-"""
-#def update_opponent_board():
+		o = urlparse(response.getheader("Response"))
+		query = parse_qs(o.path)
+
+		hit = query['hit'][0]
+		sunk = query['sink'][0]
+
+		print(hit)
+		print(sunk)
+
+		print(response.status)
+
 
 """
 Description: Main function for the battleship client.
