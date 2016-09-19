@@ -25,7 +25,7 @@ def main():
         #TEST FUNCTION
         test_server(port_num, file_content)
         init_ships()
-        init_board()
+        #init_board()
         init_http_server(port_num)
 
 """
@@ -200,8 +200,19 @@ class BattleShipHTTP_RequestHandler(BaseHTTPRequestHandler):
         Handler for any GET messages received
         """
         def do_GET(self):
+                print(self.path)
+                length = int(self.headers.get('Content-Length', 0))
+                body = self.rfile.read(length)
+                print(body)
+
                 self.protocol_version = 'HTTP/1.1'
-                self.send_response(200, 'OK')
+                self.send_response(200)
+                #self.send_header("User-Agent", "application/x-www-form-urlencoded")
+                #self.send_header("Content-type", "text/html")
+                self.send_header("Body", "BLAH")
+                self.end_headers()
+                self.wfile.write(str.encode("Hello"))
+                return
 
 
 
