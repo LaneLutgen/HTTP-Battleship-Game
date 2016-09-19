@@ -36,6 +36,9 @@ def main():
         board_print()
         init_http_server(port_num)
 
+"""
+Description:    Initializes a board in array format
+"""
 def init_board():
         x = 10 #board size
         y = 10
@@ -153,7 +156,7 @@ def check_sink():
         global ship_r 
         global ship_s 
         global ship_d
-        
+
         if ship_c == 0: #Carrier
                 return 'c' #sends back the letter of the ship, think this will work, not sure because not good with python.
                 ship_c = -1 #Sets to -1, confirming that the ship has sunk, and it has been detected as such.
@@ -251,7 +254,7 @@ class BattleShipHTTP_RequestHandler(BaseHTTPRequestHandler):
                 self.send_header("Content-type", "text/html")
                 self.end_headers()
                 for line in file_content:
-                        self.wfile.write(str.encode("HI"))
+                        self.wfile.write(str.encode(file_content))
                 return
 
         """
