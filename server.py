@@ -20,9 +20,6 @@ def main():
         global file_name
         global file_content
 
-        global player_board
-        global opponent_board
-
         #HANDLE CMD INPUT
         port_num = int(sys.argv[1])
         file_name = open(sys.argv[2], "r")

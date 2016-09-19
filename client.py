@@ -2,6 +2,9 @@ import sys
 import http.client
 from urllib.parse import urlparse, parse_qs
 
+
+opponent_board = 0
+
 """
 Description: Main function for the battleship client.
 			 Takes in 2 system arguments from command line
@@ -20,9 +23,36 @@ def main():
 		#TEST FUNCTION
 		test_client(ip_address, port_number, x_coord, y_coord)
 
+		init_opponent_board()
+		print_opponent_board()
+
 		#Establish connection
 		url = build_url(x_coord, y_coord)
 		connect_to_server(ip_address, port_number, url)
+
+"""
+
+"""
+def init_opponent_board():
+		x = 10 #board size
+		y = 10
+		global opponent_board
+
+		opponent_board = [ [ 0 for i in range(x) ] for j in range (y) ]
+		for i in range(0, len(opponent_board[0])):
+			for j in range(0, len(opponent_board[1])):
+				opponent_board[i][j] = '_'
+
+def print_opponent_board():
+		global opponent_board
+
+		s = ''
+		for i in range(0, len(opponent_board[0])):
+			for j in range(0, len(opponent_board[0])):
+				s += str(opponent_board[i][j])
+				if(j == len(opponent_board[0]) - 1):
+					print(s)
+					s = ''
 
 """
 Description: Builds a url from the input x and y coordinates
