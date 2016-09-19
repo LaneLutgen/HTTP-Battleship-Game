@@ -3,6 +3,12 @@ from urllib.parse import urlparse, parse_qs
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
 
+ship_c = 5
+ship_b = 4
+ship_r = 3
+ship_s = 3
+ship_d = 2
+
 """
 Description:    Main function for the battleship client.
                 Takes in 2 system arguments from command line
@@ -10,11 +16,6 @@ Input:          sys.argv[1] - The port number
                 sys.argv[2] - The input board file for the client (.txt)
 """
 def main():
-        global ship_c
-        global ship_b
-        global ship_r 
-        global ship_s 
-        global ship_d
         global board
         global file_name
         global file_content
@@ -30,21 +31,10 @@ def main():
         
         #TEST FUNCTION
         #test_server(port_num, file_content)
-        init_ships()
         init_board()
         print("Start Board")
         board_print()
         init_http_server(port_num)
-
-"""
-Description:    Initializes the ships with the number of hits left before sinking
-"""
-def init_ships():
-        ship_c = 5
-        ship_b = 4
-        ship_r = 3
-        ship_s = 3
-        ship_d = 2
 
 def init_board():
         x = 10 #board size
@@ -95,6 +85,12 @@ Description: Function that detects hit, miss, error.
 Very unsure about the return values, will probably need to be changed for the message.
 """
 def hit_detect(x, y):
+        global ship_c
+        global ship_b
+        global ship_r 
+        global ship_s 
+        global ship_d
+
         if(x > len(board[x]) - 1 or y > len(board[x]) - 1): #out of bounds check, only need to check one dimension since board is square.
                 return '010' #these return statements are probably placeholder, will depend on how we format the message that we send.
         
@@ -152,6 +148,12 @@ Description: Function that detects a sink.
         ship_(letter) variables should be decreased each by 1 whenever they get hit, once reaching 0, it detects a sink.
 """
 def check_sink():
+        global ship_c
+        global ship_b
+        global ship_r 
+        global ship_s 
+        global ship_d
+        
         if ship_c == 0: #Carrier
                 return 'c' #sends back the letter of the ship, think this will work, not sure because not good with python.
                 ship_c = -1 #Sets to -1, confirming that the ship has sunk, and it has been detected as such.
@@ -192,8 +194,30 @@ def end_check():
 
 
 
-def build_response(hit, sink):
-                return "x="+str(hit)+"&y="+str(sink)
+def build_response(code):
+        if code == '10':
+                hit = 1
+                sink = 0
+        elif code == '1c':
+                hit = 1
+                sink = 'C'
+        elif code == '1b':
+                hit = 1
+                sink = 'B'
+        elif code == '1r':
+                hit = 1
+                sink = 'R'
+        elif code == '1s':
+                hit = 1
+                sink = 'S'
+        elif code == '1d':
+                hit = 1
+                sink = 'D'
+        else:
+                hit = 0
+                sink = 0   
+
+        return "hit="+str(hit)+"&sink="+str(sink)
 
 
 
@@ -230,6 +254,9 @@ class BattleShipHTTP_RequestHandler(BaseHTTPRequestHandler):
                         self.wfile.write(str.encode("HI"))
                 return
 
+        """
+        Handler for any POST messages received
+        """
         def do_POST(self):
                 print(self.path)
                 length = int(self.headers.get('Content-Length', 0))
@@ -246,18 +273,19 @@ class BattleShipHTTP_RequestHandler(BaseHTTPRequestHandler):
                 print(x_coord)
                 print(y_coord)
 
+                #Update the board
                 retval = hit_detect(int(x_coord), int(y_coord))
+
+                url = build_response(retval)
+
                 response = determine_response_code(retval)
                 board_print()
-
-                """NEED TO UPDATE BOARD HERE"""
-
 
                 self.protocol_version = 'HTTP/1.1'
                 self.send_response(response)
                 self.send_header("User-Agent", "application/x-www-form-urlencoded")
                 self.send_header("Content-type", "text/html")
-                self.send_header("Response", "hit=1&sink=D")
+                self.send_header("Response", url)
                 self.end_headers()
                 return
 
