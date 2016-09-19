@@ -14,11 +14,15 @@ Input:		 sys.argv[1] - The ip address of the server
 			 sys.argv[4] - The y coordinate sent by the client
 """
 def main():
+                global x_coord
+                global y_coord
+                
 		#Receive input
 		ip_address = sys.argv[1]
 		port_number = int(sys.argv[2])
 		x_coord = int(sys.argv[3])
 		y_coord = int(sys.argv[4])
+
 
 		#TEST FUNCTION
 		test_client(ip_address, port_number, x_coord, y_coord)
@@ -44,8 +48,7 @@ def init_opponent_board():
 				opponent_board[i][j] = '_'
 
 def print_opponent_board():
-		global opponent_board
-
+                global opponent_board
 		s = ''
 		for i in range(0, len(opponent_board[0])):
 			for j in range(0, len(opponent_board[0])):
@@ -54,6 +57,15 @@ def print_opponent_board():
 					print(s)
 					s = ''
 
+def update_opponent_board():
+    #x_coord, y_coord were made global for this.
+
+    if(hit == 1):
+        opponent_board[x_coord][y_coord] = 'X'
+    if(hit == 0):
+        opponent_board[x_coord][y_coord] = 'O'
+    
+    
 """
 Description: Builds a url from the input x and y coordinates
 """
@@ -81,6 +93,7 @@ def connect_to_server(ip_address, port_number, url):
 
 """
 def interpret_response(response):
+                global hit
 		print(response.getheaders())
 
 		#Here we should get our hit/miss/sunk message
@@ -94,7 +107,7 @@ def interpret_response(response):
 
 		print(hit)
 		print(sunk)
-
+                update_opponent_board()
 		print(response.status)
 
 
