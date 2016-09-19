@@ -33,7 +33,7 @@ def connect_to_server(ip_address, port_number):
 		connection = http.client.HTTPConnection(ip_address, port_number)
 
 		#TEST ONLY
-		url = "x = 5 & y = 7"
+		url = "x=5&y=7"
 
 		#I'm thinking we'll use POST to send a fire message and GET to get the board state(s)
 		connection.request("POST", "/", url, headers={"Content-Length": len(url)})
@@ -46,13 +46,7 @@ def connect_to_server(ip_address, port_number):
 		print(response.read(20))
 		print(response.status)
 
-		#Get board states
-		my_board_url = "http://localhost:5000/own_board.html"
-		opponent_board_url = "http://localhost:5000/opponent_board.html"
-
-		connection.request("GET", "/", my_board_url)
-		
-
+		connection.close()
 
 """
 NOT IMPLEMENTED

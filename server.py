@@ -2,6 +2,7 @@ import sys
 import urllib
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
+
 """
 Description:    Main function for the battleship client.
                 Takes in 2 system arguments from command line
@@ -15,6 +16,8 @@ def main():
         global ship_s 
         global ship_d
         global board
+        global file_name
+        global file_content
 
         #HANDLE CMD INPUT
         port_num = int(sys.argv[1])
@@ -189,20 +192,18 @@ class BattleShipHTTP_RequestHandler(BaseHTTPRequestHandler):
         """
         def do_GET(self):
                 print(self.path)
-                length = int(self.headers.get('Content-Length', 0))
 
-                #This should contain the coordinates to check
-                body = self.rfile.read(length)
-                
-                #TEST
-                print(body)
+                #Make sure path will open the HTML file
+                page = open(self.path[1:], "r")
 
+                #GET should be used to get the HTML format of the game boards
                 self.protocol_version = 'HTTP/1.1'
                 self.send_response(200)
                 self.send_header("User-Agent", "application/x-www-form-urlencoded")
                 self.send_header("Content-type", "text/html")
                 self.end_headers()
-                self.wfile.write(str.encode("Hello"))
+                for line in file_content:
+                        self.wfile.write(str.encode("HI"))
                 return
 
         def do_POST(self):
@@ -220,7 +221,7 @@ class BattleShipHTTP_RequestHandler(BaseHTTPRequestHandler):
                 self.send_header("User-Agent", "application/x-www-form-urlencoded")
                 self.send_header("Content-type", "text/html")
                 self.end_headers()
-                self.wfile.write(str.encode("Hello"))
+                self.wfile.write(str.encode("hit=1&sink=D"))
                 return
 
 
