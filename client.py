@@ -4,6 +4,8 @@ from urllib.parse import urlparse, parse_qs
 
 
 opponent_board = 0
+x_coord = 0
+y_coord = 0
 
 """
 Description: Main function for the battleship client.
@@ -14,9 +16,7 @@ Input:		 sys.argv[1] - The ip address of the server
 			 sys.argv[4] - The y coordinate sent by the client
 """
 def main():
-                global x_coord
-                global y_coord
-                
+		global x_coord, y_coord
 		#Receive input
 		ip_address = sys.argv[1]
 		port_number = int(sys.argv[2])
@@ -48,7 +48,7 @@ def init_opponent_board():
 				opponent_board[i][j] = '_'
 
 def print_opponent_board():
-                global opponent_board
+		global opponent_board
 		s = ''
 		for i in range(0, len(opponent_board[0])):
 			for j in range(0, len(opponent_board[0])):
@@ -57,8 +57,9 @@ def print_opponent_board():
 					print(s)
 					s = ''
 
-def update_opponent_board():
+def update_opponent_board(hit):
     #x_coord, y_coord were made global for this.
+    global x_coord, y_coord, opponent_board
 
     if(hit == 1):
         opponent_board[x_coord][y_coord] = 'X'
@@ -93,7 +94,6 @@ def connect_to_server(ip_address, port_number, url):
 
 """
 def interpret_response(response):
-                global hit
 		print(response.getheaders())
 
 		#Here we should get our hit/miss/sunk message
@@ -107,7 +107,10 @@ def interpret_response(response):
 
 		print(hit)
 		print(sunk)
-                update_opponent_board()
+
+		update_opponent_board(int(hit))
+		print_opponent_board()
+
 		print(response.status)
 
 
