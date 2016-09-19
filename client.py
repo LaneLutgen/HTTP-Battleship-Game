@@ -35,10 +35,12 @@ def connect_to_server(ip_address, port_number):
 		#TEST ONLY
 		url = "x = 5 & y = 7"
 
-		connection.request("GET", url)
+		connection.request("GET", "/", url, headers={"Content-Length": len(url)})
 		response = connection.getresponse()
 
-		print(response)
+		print(response.getheaders())
+		print(response.read(20))
+		print(response.status)
 
 
 """
