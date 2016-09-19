@@ -190,18 +190,38 @@ class BattleShipHTTP_RequestHandler(BaseHTTPRequestHandler):
         def do_GET(self):
                 print(self.path)
                 length = int(self.headers.get('Content-Length', 0))
+
+                #This should contain the coordinates to check
                 body = self.rfile.read(length)
+                
+                #TEST
                 print(body)
 
                 self.protocol_version = 'HTTP/1.1'
                 self.send_response(200)
-                #self.send_header("User-Agent", "application/x-www-form-urlencoded")
-                #self.send_header("Content-type", "text/html")
-                self.send_header("Body", "BLAH")
+                self.send_header("User-Agent", "application/x-www-form-urlencoded")
+                self.send_header("Content-type", "text/html")
                 self.end_headers()
                 self.wfile.write(str.encode("Hello"))
                 return
 
+        def do_POST(self):
+                print(self.path)
+                length = int(self.headers.get('Content-Length', 0))
+
+                #This should contain the coordinates to check
+                body = self.rfile.read(length)
+                
+                #TEST
+                print(body)
+
+                self.protocol_version = 'HTTP/1.1'
+                self.send_response(200)
+                self.send_header("User-Agent", "application/x-www-form-urlencoded")
+                self.send_header("Content-type", "text/html")
+                self.end_headers()
+                self.wfile.write(str.encode("Hello"))
+                return
 
 
 #MAIN FUNCTION CALL
