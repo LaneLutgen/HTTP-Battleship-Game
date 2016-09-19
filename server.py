@@ -253,8 +253,13 @@ class BattleShipHTTP_RequestHandler(BaseHTTPRequestHandler):
                 self.send_header("User-Agent", "application/x-www-form-urlencoded")
                 self.send_header("Content-type", "text/html")
                 self.end_headers()
-                for line in file_content:
-                        self.wfile.write(str.encode(file_content))
+                #self.wfile.write(self.page)
+
+                """THIS IS TEMPORARY, WE MAY NEED TO ACTUALLY WRITE TO THE HTML FILE ITSELF"""
+                for i in range(0, len(board[0])):
+                        self.wfile.write(str.encode("<br>"))
+                        for j in range(0, len(board[0])):
+                                self.wfile.write(str.encode(board[i][j]))
                 return
 
         """
