@@ -25,7 +25,7 @@ def main():
         #TEST FUNCTION
         test_server(port_num, file_content)
         init_ships()
-        #init_board()
+        init_board()
         init_http_server(port_num)
 
 """
@@ -38,7 +38,6 @@ def init_ships():
         ship_s = 3
         ship_d = 2
 
-#NOTE: We don't need this function, board is written to from a text file
 def init_board():
         x = 10 #board size
         y = 10
@@ -50,21 +49,23 @@ def init_board():
                 for j in range(0, y):
                         board[i][j] = '_'
        
+
+        
         #ship placement is hard coded for now, not sure if we need to change that.
         
         #loop for carrier placing
-        for x in range(0, 4):
+        for x in range(0, ship_c):
                 board[0][x] = 'C'
         #loop for battleship placing
-        for x in range(0, 3):
+        for x in range(0, ship_b):
                 board[1][x] = 'B'
         #loop for cruiser placing
-        for x in range(0, 2):
+        for x in range(0, ship_r):
                 board[2][x] = 'R'        
         #loop for submarine placing
-        for x in range(0, 2):
+        for x in range(0, ship_s):
                 board[3][x] = 'S'                
-
+        #destroyer placing
         board[4][0] = 'D'
         board[5][0] = 'D'
 
@@ -199,19 +200,8 @@ class BattleShipHTTP_RequestHandler(BaseHTTPRequestHandler):
         Handler for any GET messages received
         """
         def do_GET(self):
-                print(self.path)
-                length = int(self.headers.get('Content-Length', 0))
-                body = self.rfile.read(length)
-                print(body)
-
                 self.protocol_version = 'HTTP/1.1'
-                self.send_response(200)
-                #self.send_header("User-Agent", "application/x-www-form-urlencoded")
-                #self.send_header("Content-type", "text/html")
-                self.send_header("Body", "BLAH")
-                self.end_headers()
-                self.wfile.write(str.encode("Hello"))
-                return
+                self.send_response(200, 'OK')
 
 
 
