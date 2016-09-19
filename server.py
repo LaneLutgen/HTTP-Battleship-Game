@@ -26,9 +26,11 @@ def main():
         file_content = file_name.read()
         
         #TEST FUNCTION
-        test_server(port_num, file_content)
+        #test_server(port_num, file_content)
         init_ships()
-        #init_board()
+        init_board()
+        print("Start Board")
+        board_print()
         init_http_server(port_num)
 
 """
@@ -44,15 +46,18 @@ def init_ships():
 def init_board():
         x = 10 #board size
         y = 10
+
+        global board
         board = [ [ 0 for i in range(x) ] for j in range (y) ]
 
         
         #f = open('board.txt', 'r')
-        #boardstr = f.read()
-        boardstr = file_name.read() #might not work because file_name isnt global. Use the lines above if you want. 
+        #boardstr = f.read() 
+        boardstr = file_content
+
         k = 0
         for i in range(0, len(board[0])):
-                for j in range(0, len(board[0])):
+                for j in range(0, len(board[1])):
                         if (boardstr[k] == '\n'):
                                 board[i][j] = boardstr[k+1]
                                 k += 2
@@ -90,15 +95,16 @@ def hit_detect(x, y):
         if(x > len(board[x]) - 1 or y > len(board[x]) - 1): #out of bounds check, only need to check one dimension since board is square.
                 return '010' #these return statements are probably placeholder, will depend on how we format the message that we send.
         
-        if(board[x][y] == 'X'): #repeated coordinate.
+        if(board[x][y] == 'X' or board[x][y] == 'M'): #repeated coordinate.
                 return '000' 
         
         if(board[x][y] == '_'): #miss check
+                board[x][y] = 'M'
                 return '00'
 
         
         if(board[x][y] == 'C'): #carrier
-                board[x][y] == 'X' #marks the spot to show it's been shot
+                board[x][y] = 'X' #marks the spot to show it's been shot
                 ship_c -= 1 
                 if(check_sink() != 0):
                         return '1c' #hit and sunk
@@ -106,7 +112,7 @@ def hit_detect(x, y):
                         return '10' #just a hit
                 
         if(board[x][y] == 'B'): #battleship
-                board[x][y] == 'X'
+                board[x][y] = 'X'
                 ship_b -= 1
                 if(check_sink() != 0):
                         return '1b'
@@ -114,7 +120,7 @@ def hit_detect(x, y):
                         return '10'
                 
         if(board[x][y] == 'R'): #cruiser
-                board[x][y] == 'X'
+                board[x][y] = 'X'
                 ship_r -= 1
                 if(check_sink() != 0):
                         return '1r'
@@ -122,7 +128,7 @@ def hit_detect(x, y):
                         return '10'
                 
         if(board[x][y] == 'S'): #submarine
-                board[x][y] == 'X'
+                board[x][y] = 'X'
                 ship_s -= 1
                 if(check_sink() != 0):
                         return '1s'
@@ -130,7 +136,7 @@ def hit_detect(x, y):
                         return '10'
                 
         if(board[x][y] == 'D'): #destroyer
-                board[x][y] == 'X'
+                board[x][y] = 'X'
                 ship_d -= 1
                 if(check_sink() != 0):
                         return '1d'
@@ -165,10 +171,10 @@ Description: This is a function that prints the current board, this could probab
 """
 def board_print():
         s = ''
-        for i in range(0, len(board[0]) - 1):
-                for j in range(0, len(board[0]) - 1):
+        for i in range(0, len(board[0])):
+                for j in range(0, len(board[0])):
                         s += str(board[i][j])
-                        if(j == len(board[0]) - 2):
+                        if(j == len(board[0]) - 1):
                                 print(s)
                                 s = ''
                                 
@@ -222,6 +228,10 @@ class BattleShipHTTP_RequestHandler(BaseHTTPRequestHandler):
                 print(x_coord)
                 print(y_coord)
 
+                retval = hit_detect(int(x_coord), int(y_coord))
+                print(retval)
+                board_print()
+
                 """NEED TO UPDATE BOARD HERE"""
 
 
@@ -232,6 +242,9 @@ class BattleShipHTTP_RequestHandler(BaseHTTPRequestHandler):
                 self.send_header("Response", "hit=1&sink=D")
                 self.end_headers()
                 return
+
+        def build_response(hit, sink):
+                return "x="+str(hit)+"&y="+str(sink)
 
 
 #MAIN FUNCTION CALL
