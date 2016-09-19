@@ -36,7 +36,7 @@ def connect_to_server(ip_address, port_number):
 		url = "x=5&y=7"
 
 		#I'm thinking we'll use POST to send a fire message and GET to get the board state(s)
-		connection.request("POST", "/", url, headers={"Content-Length": len(url)})
+		connection.request("POST", url, url, headers={"Content-Length": len(url)})
 
 		response = connection.getresponse()
 

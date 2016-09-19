@@ -1,5 +1,5 @@
 import sys
-import urllib
+from urllib.parse import urlparse, parse_qs
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
 
@@ -212,9 +212,18 @@ class BattleShipHTTP_RequestHandler(BaseHTTPRequestHandler):
 
                 #This should contain the coordinates to check
                 body = self.rfile.read(length)
-                
-                #TEST
-                print(body)
+
+                o = urlparse(self.path)
+                query = parse_qs(o.path)
+
+                x_coord = query['x'][0]
+                y_coord = query['y'][0]
+
+                print(x_coord)
+                print(y_coord)
+
+                """NEED TO UPDATE BOARD HERE"""
+
 
                 self.protocol_version = 'HTTP/1.1'
                 self.send_response(200)
