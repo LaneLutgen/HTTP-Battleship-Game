@@ -4,7 +4,7 @@ HTTP BATTLESHIP GAME
 ---------------------------------------------
 1. HOW TO PLAY
 ---------------------------------------------
-To start the game, run the server.py file from
+To start the game, run the server.py file from a
 command prompt. Use the below format where 5000
 is the port number and board.txt is the board 
 to play with.
@@ -24,19 +24,19 @@ To fire at the opponent. Run the following command:
 
 python server.py <IP ADDRESS> 5000 <X COOR> <Y COOR>
 
-The IP ADDRESS should for your opponent's server, the 
-X and Y COOR are the coordinates to send to the
+The IP ADDRESS should be for your opponent's server, the 
+X COOR and Y COOR placeholders are the coordinates to send to the
 opponent's server. Note that client.py needs to be run
-multiple times for every fire at the opponent. Every time
-the client is invoked, it will update the opponent_board.html
-file with a HIT or a MISS.
+for every fire at the opponent. Every timethe client is invoked, 
+it will update the opponent_board.html file with a HIT or a MISS.
 
-Whenever the opponent fires at you, the server will update the
+Whenever the opponent fires at the player, the server will update the
 own_board.html file with a HIT or a MISS based on the coordinates
 sent.
 
 NOTE: When testing on a single computer (Ex. IP ADDRESS: 127.0.0.1),
-both the own_player.html and opponent.board.html files will be updated.
+both the own_player.html and opponent.board.html files will be updated
+since the player is playing his/herself.
 -------------------------------------------------
 2. VIEWING THE BOARDS
 -------------------------------------------------
@@ -73,6 +73,11 @@ R = CRUISER SUNK
 S = SUBMARINE SUNK
 D = DESTROYER SUNK
 0 = NO SHIPS WERE SUNK
+
+RESPONSE CODES
+200: Success
+404: Coordinates out of bounds
+400: Repeated call
 
 
 
