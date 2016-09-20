@@ -48,8 +48,6 @@ def init_opponent_board():
 			if contents[i] == '_' or contents[i] == 'H' or contents[i] == 'M':
 				new_string += contents[i]
 
-		print(new_string)
-
 		x = 10 #board size
 		y = 10
 		global opponent_board

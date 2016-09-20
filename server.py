@@ -69,6 +69,7 @@ def init_http_server(port_num):
         server_address = (ip_address, port_num)
         httpd = HTTPServer(server_address, BattleShipHTTP_RequestHandler)
         print("Battleship HTTP Server Initialized...")
+        print("Waiting for opponent...")
 
         #This will need to be terminated somehow
         httpd.serve_forever()
