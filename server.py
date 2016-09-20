@@ -91,7 +91,7 @@ Very unsure about the return values, will probably need to be changed for the me
 def hit_detect(x, y):
         global ship_c, ship_b, ship_r, ship_s, ship_d, board
 
-        if(x > len(board[x]) - 1 or y > len(board[x]) - 1): #out of bounds check, only need to check one dimension since board is square.
+        if(x > 9 or y > 9): #out of bounds check, only need to check one dimension since board is square.
                 return '010' #these return statements are probably placeholder, will depend on how we format the message that we send.
         
         if(board[x][y] == 'X' or board[x][y] == 'M'): #repeated coordinate.
