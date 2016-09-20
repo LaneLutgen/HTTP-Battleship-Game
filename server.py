@@ -3,6 +3,7 @@ from urllib.parse import urlparse, parse_qs
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
 board = 0
+opponent_board = 0
 ship_c = 5
 ship_b = 4
 ship_r = 3
@@ -30,7 +31,7 @@ def main():
         #test_server(port_num, file_content)
 
         init_board()
-        write_board_to_html()
+        write_board_to_html('opponent_board.html')
         init_http_server(port_num)
 
 """
@@ -58,6 +59,7 @@ def init_board():
                         else:
                                 board[i][j] = boardstr[k]
                                 k += 1
+        write_board_to_html('own_board.html')
 
 """
 Description:    Initializes the HTTP Server
@@ -224,10 +226,10 @@ def determine_response_code(code):
         else:
                 return 200
 
-def write_board_to_html():
+def write_board_to_html(which):
         global board
 
-        f = open('own_board.html', 'w')
+        f = open(which, 'w')
 
         #Write the header stuff
         header = """
@@ -245,13 +247,20 @@ def write_board_to_html():
         f.write(header)
 
         current_line = ''
-
-        for i in range(0, len(board[0])):
-                f.write('<tr>')
-                for j in range(0, len(board[0])):
-                        f.write('<th>' + str(board[i][j]) + '</th>')
-                        if(j == len(board[0]) - 1):
-                                f.write('</tr>')
+        if which == 'own_board.html':
+                for i in range(0, len(board[0])):
+                        f.write('<tr>')
+                        for j in range(0, len(board[0])):
+                                f.write('<th>' + str(board[i][j]) + '</th>')
+                                if(j == len(board[0]) - 1):
+                                        f.write('</tr>')
+        elif which == 'opponent_board.html':
+                for i in range(0, len(board[0])):
+                        f.write('<tr>')
+                        for j in range(0, len(board[0])):
+                                f.write('<th>' + '_' + '</th>')
+                                if(j == len(board[0]) - 1):
+                                        f.write('</tr>')
 
         footer = """
         </table>
@@ -310,7 +319,7 @@ class BattleShipHTTP_RequestHandler(BaseHTTPRequestHandler):
                 url = build_response(retval)
 
                 print('Updating player board...')
-                write_board_to_html()
+                write_board_to_html('own_board.html')
 
                 response = determine_response_code(retval)
 

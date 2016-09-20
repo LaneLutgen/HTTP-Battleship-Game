@@ -1,5 +1,6 @@
 import sys
 import http.client
+import re
 from urllib.parse import urlparse, parse_qs
 
 
@@ -28,7 +29,6 @@ def main():
 		#test_client(ip_address, port_number, x_coord, y_coord)
 
 		init_opponent_board()
-
 		#Establish connection
 		url = build_url(x_coord, y_coord)
 		connect_to_server(ip_address, port_number, url)
@@ -37,14 +37,29 @@ def main():
 
 """
 def init_opponent_board():
+		#Read the current state of the board from the HTML file
+		f = open('opponent_board.html', 'r')
+		contents = f.read()
+
+		#Filter out all the board characters
+		new_string = ''
+
+		for i in range(len(contents)):
+			if contents[i] == '_' or contents[i] == 'H' or contents[i] == 'M':
+				new_string += contents[i]
+
+		print(new_string)
+
 		x = 10 #board size
 		y = 10
 		global opponent_board
 
+		k = 0
 		opponent_board = [ [ 0 for i in range(x) ] for j in range (y) ]
 		for i in range(0, len(opponent_board[0])):
 			for j in range(0, len(opponent_board[1])):
-				opponent_board[i][j] = '_'
+				opponent_board[i][j] = new_string[k]
+				k += 1
 
 def print_opponent_board():
 		global opponent_board
@@ -61,14 +76,18 @@ def update_opponent_board(hit):
     global x_coord, y_coord, opponent_board
 
     if(hit == 1):
-        opponent_board[x_coord][y_coord] = 'X'
+        opponent_board[x_coord][y_coord] = 'H'
     if(hit == 0):
-        opponent_board[x_coord][y_coord] = 'O'
+        opponent_board[x_coord][y_coord] = 'M'
 
-    write_board_to_html(opponent_board)
+    write_board_to_html()
     
 
-def write_board_to_html(board):
+def write_board_to_html():
+	global opponent_board
+
+	board = opponent_board
+
 	f = open('opponent_board.html', 'w')
 
 	#Write the header stuff
