@@ -2,7 +2,7 @@ import sys
 from urllib.parse import urlparse, parse_qs
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
-
+board = 0
 ship_c = 5
 ship_b = 4
 ship_r = 3
@@ -85,11 +85,7 @@ Description: Function that detects hit, miss, error.
 Very unsure about the return values, will probably need to be changed for the message.
 """
 def hit_detect(x, y):
-        global ship_c
-        global ship_b
-        global ship_r 
-        global ship_s 
-        global ship_d
+        global ship_c, ship_b, ship_r, ship_s, ship_d, board
 
         if(x > len(board[x]) - 1 or y > len(board[x]) - 1): #out of bounds check, only need to check one dimension since board is square.
                 return '010' #these return statements are probably placeholder, will depend on how we format the message that we send.
@@ -148,11 +144,7 @@ Description: Function that detects a sink.
         ship_(letter) variables should be decreased each by 1 whenever they get hit, once reaching 0, it detects a sink.
 """
 def check_sink():
-        global ship_c
-        global ship_b
-        global ship_r 
-        global ship_s 
-        global ship_d
+        global ship_c, ship_b, ship_r, ship_s, ship_d
 
         if ship_c == 0: #Carrier
                 return 'c' #sends back the letter of the ship, think this will work, not sure because not good with python.
@@ -175,6 +167,8 @@ def check_sink():
 Description: This is a function that prints the current board, this could probably be used for updating the board, but I'm not sure. Regardless, here it is.
 """
 def board_print():
+        global board
+
         s = ''
         for i in range(0, len(board[0])):
                 for j in range(0, len(board[0])):
@@ -229,6 +223,44 @@ def determine_response_code(code):
         else:
                 return 200
 
+def write_board_to_html():
+        global board
+
+        print('Now writing board to file')
+
+        f = open('own_board.html', 'w')
+
+        #Write the header stuff
+        header = """
+        <!DOCTYPE html>
+        <html>
+        <head>
+        <style>
+        </style>
+        </head>
+        <body>
+
+        <table>
+        """
+
+        f.write(header)
+
+        current_line = ''
+
+        for i in range(0, len(board[0])):
+                f.write('<tr>')
+                for j in range(0, len(board[0])):
+                        f.write('<th>' + str(board[i][j]) + '</th>')
+                        if(j == len(board[0]) - 1):
+                                f.write('</tr>')
+
+        footer = """
+        </table>
+        </body>
+        </html>
+        """
+
+        f.write(footer)
 
 """
 Description: Class for handling any GET messages
@@ -282,6 +314,8 @@ class BattleShipHTTP_RequestHandler(BaseHTTPRequestHandler):
                 retval = hit_detect(int(x_coord), int(y_coord))
 
                 url = build_response(retval)
+
+                write_board_to_html()
 
                 response = determine_response_code(retval)
                 board_print()

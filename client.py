@@ -65,8 +65,47 @@ def update_opponent_board(hit):
         opponent_board[x_coord][y_coord] = 'X'
     if(hit == 0):
         opponent_board[x_coord][y_coord] = 'O'
+
+    write_board_to_html(opponent_board)
     
-    
+
+def write_board_to_html(board):
+	f = open('opponent_board.html', 'w')
+
+	#Write the header stuff
+	header = """
+	<!DOCTYPE html>
+	<html>
+	<head>
+	<style>
+	</style>
+	</head>
+	<body>
+
+	<table>
+	"""
+
+	f.write(header)
+
+	current_line = ''
+
+	for i in range(0, len(board[0])):
+		f.write('<tr>')
+		for j in range(0, len(board[0])):
+			f.write('<th>' + str(board[i][j]) + '</th>')
+			if(j == len(board[0]) - 1):
+				f.write('</tr>')
+
+	footer = """
+	</table>
+	</body>
+	</html>
+	"""
+
+	f.write(footer)
+
+
+
 """
 Description: Builds a url from the input x and y coordinates
 """
