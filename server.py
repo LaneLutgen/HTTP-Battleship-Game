@@ -28,15 +28,16 @@ def main():
         
         #TEST FUNCTION
         #test_server(port_num, file_content)
+
         init_board()
-        print("Start Board")
-        board_print()
+        write_board_to_html()
         init_http_server(port_num)
 
 """
 Description:    Initializes a board in array format
 """
 def init_board():
+        print('Creating player board...')
         x = 10 #board size
         y = 10
 
@@ -65,7 +66,7 @@ def init_http_server(port_num):
         ip_address = '127.0.0.1' #not sure if this is correct or not 
         server_address = (ip_address, port_num)
         httpd = HTTPServer(server_address, BattleShipHTTP_RequestHandler)
-        print("HTTP Server Initialized")
+        print("Battleship HTTP Server Initialized...")
 
         #This will need to be terminated somehow
         httpd.serve_forever()
@@ -226,8 +227,6 @@ def determine_response_code(code):
 def write_board_to_html():
         global board
 
-        print('Now writing board to file')
-
         f = open('own_board.html', 'w')
 
         #Write the header stuff
@@ -290,6 +289,7 @@ class BattleShipHTTP_RequestHandler(BaseHTTPRequestHandler):
         Handler for any POST messages received
         """
         def do_POST(self):
+                print('Communicating with opponent...')
                 print(self.path)
                 length = int(self.headers.get('Content-Length', 0))
 
@@ -302,19 +302,19 @@ class BattleShipHTTP_RequestHandler(BaseHTTPRequestHandler):
                 x_coord = query['x'][0]
                 y_coord = query['y'][0]
 
-                print(x_coord)
-                print(y_coord)
+                print('Oppenent sent coordinates '+str(x_coord)+', '+str(y_coord))
 
                 #Update the board
                 retval = hit_detect(int(x_coord), int(y_coord))
 
                 url = build_response(retval)
 
+                print('Updating player board...')
                 write_board_to_html()
 
                 response = determine_response_code(retval)
-                board_print()
 
+                print('Sending response...')
                 self.protocol_version = 'HTTP/1.1'
                 self.send_response(response)
                 self.send_header("User-Agent", "application/x-www-form-urlencoded")

@@ -25,10 +25,9 @@ def main():
 
 
 		#TEST FUNCTION
-		test_client(ip_address, port_number, x_coord, y_coord)
+		#test_client(ip_address, port_number, x_coord, y_coord)
 
 		init_opponent_board()
-		print_opponent_board()
 
 		#Establish connection
 		url = build_url(x_coord, y_coord)
@@ -110,6 +109,7 @@ def write_board_to_html(board):
 Description: Builds a url from the input x and y coordinates
 """
 def build_url(x_coord, y_coord):
+		print('Coordinates selected:' + str(x_coord) + ', '+str(y_coord))
 		return "x="+str(x_coord)+"&y="+str(y_coord)
 
 """
@@ -118,11 +118,16 @@ Params: ip_address - the IP address of the server
 		port_number - the port number to use
 """
 def connect_to_server(ip_address, port_number, url):
+		print('Connecting to opponent server...')
+
 		connection = http.client.HTTPConnection(ip_address, port_number)
 
-		#I'm thinking we'll use POST to send a fire message and GET to get the board state(s)
+		print('Sending coordinates...')
+		
 		connection.request("POST", url, url, headers={"Content-Length": len(url)})
 
+		print('Coordinates sent successfully!')
+		print('Waiting for response...')
 		response = connection.getresponse()
 
 		interpret_response(response)
@@ -133,24 +138,29 @@ def connect_to_server(ip_address, port_number, url):
 
 """
 def interpret_response(response):
-		print(response.getheaders())
-
-		#Here we should get our hit/miss/sunk message
-		print(response.read())
-
 		o = urlparse(response.getheader("Response"))
 		query = parse_qs(o.path)
 
 		hit = query['hit'][0]
 		sunk = query['sink'][0]
 
-		print(hit)
-		print(sunk)
+		if(int(hit) == 1):
+			print('Server responded with a HIT!')
+		elif(int(hit) == 0):
+			print('Server responded with a MISS!')
+
+		if(sunk == 'C'):
+			print('Carrier was SUNK!')
+		elif(sunk == 'B'):
+			print('Battleship was SUNK!')
+		elif(sunk == 'R'):
+			print('Cruiser was SUNK!')
+		elif(sunk == 'S'):
+			print('Submarine was SUNK!')
+		elif(sunk == 'D'):
+			print('Destroyer was SUNK!')
 
 		update_opponent_board(int(hit))
-		print_opponent_board()
-
-		print(response.status)
 
 
 """
