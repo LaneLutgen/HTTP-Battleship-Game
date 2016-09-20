@@ -77,7 +77,7 @@ D = DESTROYER SUNK
 RESPONSE CODES
 200: Success
 404: Coordinates out of bounds
-400: Repeated call
+410: Repeated call
 
 
 
