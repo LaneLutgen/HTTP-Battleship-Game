@@ -1,0 +1,79 @@
+---------------------------------------------
+HTTP BATTLESHIP GAME
+@AUTHORS Lane Lutgen and Chance Ronning Glenn
+---------------------------------------------
+1. HOW TO PLAY
+---------------------------------------------
+To start the game, run the server.py file from
+command prompt. Use the below format where 5000
+is the port number and board.txt is the board 
+to play with.
+
+python server.py 5000 board.txt
+
+Upon running server.py, the server will create
+or overwrite two HTML files: own_board.html
+and opponent_board.html.
+
+To stop the game at any time, close the command
+prompt running the server. NOTE: Next time you run
+the server, both the PLAYER and the OPPONENT boards
+will be reset.
+
+To fire at the opponent. Run the following command:
+
+python server.py <IP ADDRESS> 5000 <X COOR> <Y COOR>
+
+The IP ADDRESS should for your opponent's server, the 
+X and Y COOR are the coordinates to send to the
+opponent's server. Note that client.py needs to be run
+multiple times for every fire at the opponent. Every time
+the client is invoked, it will update the opponent_board.html
+file with a HIT or a MISS.
+
+Whenever the opponent fires at you, the server will update the
+own_board.html file with a HIT or a MISS based on the coordinates
+sent.
+
+NOTE: When testing on a single computer (Ex. IP ADDRESS: 127.0.0.1),
+both the own_player.html and opponent.board.html files will be updated.
+-------------------------------------------------
+2. VIEWING THE BOARDS
+-------------------------------------------------
+To view the HTML representations of the boards, either open up the 
+own_board.html and the opponent_board.html files locally, or if the 
+player server is running, they can be accessed in any browser with the
+following URLs:
+
+http://localhost:5000/own_board.html
+http://localhost:5000/opponent_board.html
+
+These URLs are handled by the server in a GET request handler.
+-------------------------------------------------
+3. MESSAGE FORMAT
+-------------------------------------------------
+Messages from client to opponent server are sent
+in the following format: "x=0&y=1" where x is the
+x coordinate and y is the y coordinate. (0 and
+1 are used as examples). The HTTP message type used for 
+coordinates is POST.
+
+Response messages from opponent server to client are sent
+in the following format and are handled in the POST request handler: 
+"hit=1/0&sink=C/B/R/S/D/0"
+
+Where...
+
+1 = HIT
+0 = MISS
+
+C = CARRIER SUNK
+B = BATTLESHIP SUNK
+R = CRUISER SUNK
+S = SUBMARINE SUNK
+D = DESTROYER SUNK
+0 = NO SHIPS WERE SUNK
+
+
+
+
