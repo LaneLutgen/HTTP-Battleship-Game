@@ -275,6 +275,7 @@ class BattleShipHTTP_RequestHandler(BaseHTTPRequestHandler):
 
                 #Make sure path will open the HTML file
                 page = open(self.path[1:], "r")
+                contents = page.read()
 
                 #GET should be used to get the HTML format of the game boards
                 self.protocol_version = 'HTTP/1.1'
@@ -282,13 +283,7 @@ class BattleShipHTTP_RequestHandler(BaseHTTPRequestHandler):
                 self.send_header("User-Agent", "application/x-www-form-urlencoded")
                 self.send_header("Content-type", "text/html")
                 self.end_headers()
-                #self.wfile.write(self.page)
-
-                """THIS IS TEMPORARY, WE MAY NEED TO ACTUALLY WRITE TO THE HTML FILE ITSELF"""
-                for i in range(0, len(board[0])):
-                        self.wfile.write(str.encode("<br>"))
-                        for j in range(0, len(board[0])):
-                                self.wfile.write(str.encode(board[i][j]))
+                self.wfile.write(str.encode(contents))                
                 return
 
         """
